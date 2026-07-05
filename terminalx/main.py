@@ -1,9 +1,9 @@
+from dotenv import load_dotenv
 import typer
 import asyncio
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from dotenv import load_dotenv
 
 # Load env variables first
 load_dotenv()
