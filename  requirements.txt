@@ -1,0 +1,5 @@
+typer
+rich
+cognee
+python-dotenv
+psycopg2-binary

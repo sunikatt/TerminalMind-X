@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: terminalx_postgres
+    environment:
+      POSTGRES_USER: terminalx
+      POSTGRES_PASSWORD: terminalx_password
+      POSTGRES_DB: terminalx_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - terminalx_pg_data:/var/lib/postgresql/data
+
+volumes:
+  terminalx_pg_data:
