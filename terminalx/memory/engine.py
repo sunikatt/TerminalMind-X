@@ -8,20 +8,17 @@ console = Console()
 async def init_memory():
     """Initializes Cognee configurations with Google Gemini."""
     
-    # 1. Tell Cognee to use Gemini (via its internal LiteLLM router)
-    # Using gemini-1.5-flash as it is lightning fast for CLI responses
-    cognee.config.llm_provider = "litellm" 
-    cognee.config.llm_model = "gemini/gemini-1.5-flash" 
-    
-    # Ensure the API key is picked up from the environment
-    if not os.getenv("GEMINI_API_KEY"):
+    # Grab the key that we just loaded with dotenv
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
         console.print("[red]Error: GEMINI_API_KEY not found in .env file![/red]")
         return False
-        
-    cognee.config.set_system_prompt(
-        "You are TerminalX, a helpful local CLI assistant that remembers developer workflows. "
-        "Answer concisely and provide shell commands when applicable."
-    )
+
+    # Force feed the configuration to Cognee
+    cognee.config.llm_provider = "litellm" 
+    cognee.config.llm_model = "gemini/gemini-1.5-flash" 
+    cognee.config.llm_api_key = api_key  # <--- THIS IS THE MAGIC LINE
+    
     console.print("[green]Memory engine initialized using Google Gemini.[/green]")
     return True
     
