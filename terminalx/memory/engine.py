@@ -2,28 +2,30 @@ import os
 import asyncio
 import cognee
 from rich.console import Console
+from dotenv import load_dotenv
+
+# 1. EXPLICITLY LOAD THE .ENV FILE EVERY TIME
+load_dotenv()
 
 console = Console()
 
-async def init_memory():
-    """Initializes Cognee configurations with Google Gemini."""
-    import os
-    
-    # 1. Grab the key
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        console.print("[red]Error: GEMINI_API_KEY not found in .env file![/red]")
-        return False
-        
-    # 2. Tell Cognee to use Gemini via LiteLLM
+# 2. CONFIGURE COGNEE GLOBALLY FOR ALL COMMANDS
+gemini_key = os.getenv("GEMINI_API_KEY")
+
+if gemini_key:
     cognee.config.llm_provider = "litellm" 
     cognee.config.llm_model = "gemini/gemini-1.5-flash" 
-    
-    # 3. Explicitly pass the API key to Cognee config
-    cognee.config.llm_api_key = api_key
-    
-    console.print("[green]Memory engine initialized using Google Gemini.[/green]")
-    return True
+    # Explicitly hand the key to Cognee
+    cognee.config.llm_api_key = gemini_key 
+else:
+    console.print("[red]Critical Error: GEMINI_API_KEY not found in .env![/red]")
+
+async def init_memory():
+    """Simple check to verify the engine is ready."""
+    if gemini_key:
+        console.print("[green]Memory engine initialized using Google Gemini.[/green]")
+        return True
+    return False
 async def remember_data(data_list: list[str], dataset_name: str):
     """
     Adds a list of text data to Cognee and builds the knowledge graph.
