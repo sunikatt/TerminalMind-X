@@ -7,19 +7,23 @@ console = Console()
 
 async def init_memory():
     """Initializes Cognee configurations with Google Gemini."""
+    import os
     
-    # 1. Tell Cognee to use Gemini (via its internal LiteLLM router)
-    cognee.config.llm_provider = "litellm" 
-    cognee.config.llm_model = "gemini/gemini-1.5-flash" 
-    
-    # Ensure the API key is picked up from the environment
-    if not os.getenv("GEMINI_API_KEY"):
+    # 1. Grab the key
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
         console.print("[red]Error: GEMINI_API_KEY not found in .env file![/red]")
         return False
         
+    # 2. Tell Cognee to use Gemini via LiteLLM
+    cognee.config.llm_provider = "litellm" 
+    cognee.config.llm_model = "gemini/gemini-1.5-flash" 
+    
+    # 3. Explicitly pass the API key to Cognee config
+    cognee.config.llm_api_key = api_key
+    
     console.print("[green]Memory engine initialized using Google Gemini.[/green]")
     return True
-    
 async def remember_data(data_list: list[str], dataset_name: str):
     """
     Adds a list of text data to Cognee and builds the knowledge graph.
