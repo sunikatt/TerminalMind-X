@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 # Load env variables first
 load_dotenv()
 
-from parsers.history_parser import parse_bash_history
-from memory.engine import init_memory, remember_data, ask_memory
+from terminalx.parsers.history_parser import parse_bash_history
+from terminalx.memory.engine import init_memory, remember_data, ask_memory
 
 app = typer.Typer(help="TerminalX - Your Terminal Never Forgets")
 console = Console()
